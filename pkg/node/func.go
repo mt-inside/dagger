@@ -28,6 +28,14 @@ func buildCallNode(log logr.Logger, parent Node, f *exprpb.Expr_Call) Node {
 	node.parent = parent
 
 	switch f.Function {
+	case "default":
+		node.f = func(xs ...value.Value) value.Value {
+			expr := xs[0]
+			if expr.Mode == value.Pending {
+				return xs[1]
+			}
+			return expr
+		}
 	case "_+_":
 		node.f = liftM(func(xs ...int64) int64 { return xs[0] + xs[1] })
 	case "_-_":

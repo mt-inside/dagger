@@ -16,6 +16,13 @@ func main() {
 
 	env, err := cel.NewEnv(
 		cel.Declarations(
+			decls.NewFunction("default",
+				decls.NewOverload(
+					"default_int",
+					[]*exprpb.Type{decls.Int, decls.Int}, // args
+					decls.Int,                            // return
+				),
+			),
 			decls.NewFunction("streamRange",
 				decls.NewOverload(
 					"stream_range_int",
@@ -53,6 +60,7 @@ func main() {
 
 	// https://github.com/google/cel-spec/blob/master/doc/langdef.md
 	ast, issues := env.Compile(`2 * streamTcp('localhost:1234') + streamHttp('http://localhost:8080')`)
+	//ast, issues := env.Compile(`2 * default(streamTcp('localhost:1234'),1) + default(streamTcp('localhost:1235'),1)`)
 	//ast, issues := env.Compile(`2 + streamHttp('http://localhost:8080') - streamHttp('http://localhost:8080')`) // Flips, would need a debounce mode (eg settle for 1s after an Update())
 	//ast, issues := env.Compile(`floor10(streamRange(1,1))`)
 	if issues != nil && issues.Err() != nil {
