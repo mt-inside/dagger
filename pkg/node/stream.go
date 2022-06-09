@@ -19,6 +19,12 @@ func buildStreamNode(log logr.Logger, parent Node, f *exprpb.Expr_Call) Node {
 	node := &StreamNode{BaseNode{parent: parent}}
 
 	switch f.Function {
+	case "streamTimestamp":
+		go stream.Timestamp(
+			log,
+			node,
+			time.Duration(f.Args[0].GetConstExpr().GetInt64Value())*time.Second,
+		)
 	case "streamRange":
 		go stream.Range(
 			log,

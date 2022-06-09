@@ -23,6 +23,13 @@ func main() {
 					decls.Int,                            // return
 				),
 			),
+			decls.NewFunction("timestamp",
+				decls.NewOverload(
+					"timestamp_int",
+					[]*exprpb.Type{decls.Int}, // args
+					decls.Int,                 // return
+				),
+			),
 			decls.NewFunction("streamRange",
 				decls.NewOverload(
 					"stream_range_int",
